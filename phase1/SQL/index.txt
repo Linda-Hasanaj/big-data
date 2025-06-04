@@ -1,0 +1,28 @@
+index
+
+
+cka eshte nje indeks?-------------
+index eshte nje data structure qe ofron nje akses te shpejte ne te dhena e ne kete menyre e optimizon shpejtesine e queries, eshte me teper usable nese kemi tabela te medha ne databaze. qysh me e kuptu indexin ma mire e menojna analogjine e nje hoteli te madh, nuk kemi naj guide edhe po dojna me zgjedh dhomen 5001, tash e marrim ni map qe tregon se ne cfare numri te range cilat dhoma ndodhen ne cilen ndertese, pra kjo e perfaqeson nje index ne databaze qe e ndihmon databazen me i lokalizu te dhenat pa pase nevoje me e skanu komplet databazen me te dhena.
+
+index types------------------
+1. structure - clustered dhe non clustered index 
+2. storage - rowstore dhe columnstore index
+3. functions - unique dhe filtered index
+
+disa lloje te indeksave jane me te mire per me lexu te tjeret jane me te mire per me shkru, pra duhem me e gjet the right type of index per punen qe po na duhet
+
+heap structure------------------
+qysh ruhet databaza ne nje data file, ruhet ne formatin e page jo ne rows edhe columns qysh kena menu, tash nje page eshte njesia me e vogel qe nxen hapesire ne databaze prej 8kb, brenda nje page munen me u rujte data, metadata, indexes etc. dhe sa here qe na jena tu bo interact me te dhana sql shkrun edhe lexon prej ketyre pages. tash sa i perket pages i kena dy lloje te tyne kryesore qe jane:
+data pages
+index pages
+
+data page:
+eshte e ndame ne disa seksione, seksioni i pare eshte headeri i faqes qe ruhen key infos per meta data psh ni file id edhe ni numer unik per secilen page. 
+seksioni tjeter eshte ku ruhen rows me te dhena nga databaza, tash sql tenton qe me ru sa ma shume rows qe munet me ni page ama sa rows i run varet prej madhesise te rreshtave
+seksioni i fundit me ni data page eshte nje offset array qe eshte pak a shume si ni indeks per rreshtat e databazes qe jane te rujtun ne kete faqe, it keeps track ku fillon cdo rresht edhe i nimon sql me gjet rreshtin qe e lyp.
+- qysh ruhen te dhenat ktu, nuk jon te sortume e kjo krejt eshte mungesa e indexes, tash qikjo menyre e rujtjes se te dhanave quhet heap table without a clustered index ku rreshtat ruhen ne menyre te rendomte pa naj rregull, kjo eshte mire meqenese te dhenat insertohen shpejte ama per me lexu dicka prej kesaj tabele eshte ma e ngadalte pra me qet menyre kena fast writting ama slow reading. tash nese nje tabele e kena te rujtne ne 4 pages me nga 5 rreshta te dhena edhe na duhet me gjet ni rekord qe eshte ne page te fundit, per me gjet qat rekord shkohet skanohet cdo faqe per me gje, e qiky proces quhet FULL TABLE SCAN
+
+clustered index------------------------
+nese krijojme clustered index, cka ndodhe me pages eshte se te dhenat se pari sortohen ne baze te kolones id, nder te tjera sql e krijon nje B-TREE (Balance tree) qe eshte nje menyre me i strukturu te dhenat ne menyre hierarkike neper leaves per me mujte me i locate ma shpejte te dhenat. kjo tree fillon me u plotesu me root note, tani me intermediate nodes deri sa t mrrin te leaf nodes
+- leaf nodes i ruajne te dhenat e databazes, krejt pages te databazes me te dhena ruhen ne leaf level
+- tani sql ja nise me i build intermediate nodes ku ruhen index page, ketu nuk ruhen te dhenat po ruhet ni key value pair qe eshte nje pointer per nje index page tjeter ose te nje data page

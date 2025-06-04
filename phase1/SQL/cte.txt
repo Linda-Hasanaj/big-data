@@ -1,0 +1,120 @@
+cte eshte common table expression, eshte nje lloj tabele virtuale qe perdoret shume here mrena queryt per me e thjeshtesu edhe me organizu ma mire query komplekse.
+
+tash fillimisht e shkrujme nje pjese te queryt brenda nje cte scope, kur ta bojna run permes cte dmth krijohet nje tabele virtuale e cila nuk eshte stored ne databze dhe me pas me nje subquery tjeter na munem me shku me e query kete tabelen virtuale te krijume me cte, e ne te njejten kohe munem me shtu joins per tabelen virtuale edhe tabelat e rujtme ne databaze, sapo query te perfundoje kjo tabele virtuale e krijume me cte po u shkaterrojka
+
+nese e kemi nje query te jashtme e cila merret vec me tabelat e databazes atehere kjo query nuk munet me bo joina me tabelen virtuale te krijume me cte meqenese cte eshte e ekzekutueshme vetem lokalisht me main queryn e vet dhe nuk eshte globally available dhe pra eshte e dedikuar vec per main query te vet.
+
+tash pak a shume njejte funksionon subquery me cte sa i perket qe jane te qasshme rezultatet vetem lokalisht, ama dallimi eshte se ne subquery rezultati munet me u perdore vec nje here, edhe nuk munem psh me shku ne main query edhe me e perdore ma shume se nihere pjesen e subqueryt, kurse sa i perket cte, prej main query kjo tabele virtuale munet me u perdore sa here qe kena nevoje
+
+kur duhet me perdore cte?-----------
+kur kemi psh shume here join ne mes te dy tabelave te njjeta, permes subquery i bjen qe po riperseritet kogja shpesh kodi, nese perdorim cte na vec munem me e riperdore qat join qe e kemi bo per here te pare
+
+nje cte e improve readibility te queries, ofron modularity qe dmth e ndane kodin neper pjese me te vogla dhe me lehte te menaxhueshme, dhe avantazhi me i rendesishem qe e ofron cte eshre riperdorimi ku nje pjese te kodit e shkrujme njehere edhe e perdorim sa here dojna brenda main queryt.
+
+si ekzekutohet cte ne databaze?----------------
+kur jemi tu shkru nje query me cte kah ana e klientit edhe kur e bojna run masnej qet query edhe shkon te databaze engine, database engine e ka prioritetin me te larte kur ka cte, edhe se pari ekzekutohet cte, tash kur ekzekutohet cte se pari merren te dhenat nga tabelat qe i vyjne cte prej diskut edhe me pas rezultati shkon edhe ruhet ne cache si tabele, edhe kjo tabele emertohet qashtu qysh ka thon cte, me pas database engine shkon edhe e merr main query edhe i merr te dhenat qe i duhen prej diskut, me pas merret tabela e krijume ne cache
+
+cte types-----------------------
+dy lloje te cte kemi:
+1. none-recursive cte: standalone cte dhe nested cte
+2. recursive cte
+
+standalone cte-----------
+eshte forma me e thjeshte e cte, eshte nje cte query qe perdoret dhe definohet ne menyre te pavarur, eshte self contained edhe nuk varet prej naj cte tjeter ose naj query tjeter, standalone query i merr te dhenat prej databazes edhe e krijon nje rezultat intermediate dhe kesisoji kjo cte munet me u bo run ne menyre te pavarur, e nese e marrim main queryn parasysh munem me pa qe ajo nuk munet me u ekzekutu ne menyre te pavarur meqenese i duhen resultatet prej cte
+
+e kemi nje query te thjeshte, per me vendose brenda nje cte na duhem me e vendose kete query brenda klauzes with:
+
+with CTE-TableName AS
+(
+select...
+from...
+where...
+)
+ama pas definimit na duhem me e perdore kete cte, dhe na e shfrytezojme cte ne kete menyre:
+select...
+from CTE-TableName
+where...
+
+* brenda cte nuk munem me perdore order by, order by nuk munet mu perdore ne views, inline functions, derived tables, subqueries, nese dojna me sort te dhena duhem me e bo kete sen ne main query
+
+multiple standalone cte---------------------
+kur kemi disa cte ne databaze, secila prej tyre shkojne e queryn databazen edhe i krijojne secila ato intermediate results te veta, tani nje main query i perdore keto rezultate edhe e jep final resutin, secila cte eshte self contained edhe te pavarura prej njera tjetres, kur dojme me definu ma shume se nje cte kjo eshte sintaksa:
+WITH Cte-Name1 AS
+(
+select...
+from...
+where...
+)
+, CTE-Name2 AS
+(
+select...
+from...
+where...
+)
+.
+.
+. dhe cte te tjera
+main query:
+select...
+from CTE-Name1
+join CTE-Name2
+where...
+
+nested cte------------------------
+eshte nje cte brenda nje cte tjeter, dicka e ngjajshme me subqueries, tash nje cte munet mi perdore rezultatet qe i prodhon nje cte tjeter, nje nested cte nuk munet me u bo run si e pavarun meqenese i perdore rezultatet e nje cte tjeter. sintaksa e nje nested cte:
+
+WITH CTE-Name1 AS
+(
+select...
+from...
+where...
+)
+, CTE-Name2 AS
+(
+select...
+from CTE-Name1
+where...
+)
+main query:
+select...
+from CTE-Name2
+
+* nje nested cte nuk munem me e bo run si te vetme
+
+best practices cte-------------------------------
+3 deri ne 5 cte brenda nje query eshte shume mire  
+
+recursive cte-----------------------------
+kur kemi te bejme me non recursive cte ajo cte eshte e ekzekutume vec njehere pa perseritje, sql e ekzekuton njehere edhe ska ma shume
+nje recursive cte eshte nje self-referencing query qe vazhdimisht proceson te dhena deri sa nje kusht specifik plotesohet
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
