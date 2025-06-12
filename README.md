@@ -32,6 +32,16 @@ This repository contains two major phases of a Big Data course project completed
 
 ---
 
+## Phase 3: Big Data, NoSQL & Network Analysis
+
+- Used Apache Spark with PySpark to process large datasets (`usa_county_wise.csv`) and Mondial
+- Performed SparkSQL queries
+- Structured NoSQL collections in MongoDB using JSON files
+- Wrote advanced MongoDB aggregation queries
+- Performed Social Network Analysis (SNA) using ORA Lite
+  - Calculated Betweenness, Closeness, Degree centralities
+  - Imported datasets into ORA and visualized network graphs
+ - Technologies: PySpark, MongoDB, ORA Lite, JSON
 ## Getting Started
 
 No code to run directly. This project focuses on data engineering concepts, SQL queries, data modeling, XML processing, and visual analytics.
