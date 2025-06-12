@@ -44,7 +44,7 @@ This repository contains two major phases of a Big Data course project completed
  - Technologies: PySpark, MongoDB, ORA Lite, JSON
 ## Getting Started
 
-No code to run directly. This project focuses on data engineering concepts, SQL queries, data modeling, XML processing, and visual analytics.
+No code to run directly. This project focuses on data engineering concepts, query writing, XML/NoSQL/SparkSQL processing, network analysis, and dashboard design.
 
 ---
 
