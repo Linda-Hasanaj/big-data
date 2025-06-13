@@ -1,8 +1,5 @@
 # Big Data Project 
 
-This repository contains two major phases of a Big Data course project completed during the Computer and Software Engineering studies.
-
-
 ---
 
 ##  Phase 1: Structured Querying & Data Warehouse Design
